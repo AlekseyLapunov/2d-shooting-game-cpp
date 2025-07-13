@@ -1,4 +1,5 @@
-#include <iostream>  
+#include <iostream>
+#include <sstream>
 #include <windows.h>  //I tried to stick to the librariess taught by Sir waseem only
 using namespace std;
 
@@ -29,29 +30,34 @@ void printBoard() {
     COORD pos = { 0, 0 };
     //sets position of baord 
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+
+    std::stringstream frame;
+
 //will represent score board
-    cout << "+--------------------------------------------------+" << endl;
-    cout << "|   SCORE: " << sc
+    frame << "+--------------------------------------------------+" << endl;
+    frame << "|   SCORE: " << sc
          << "   LIVES: " << hp
          << "   DAMAGE: " << damage << "/5"
          << "   WAVE: " << layer << "   |" << endl;
-    cout << "+--------------------------------------------------+" << endl;
+    frame << "+--------------------------------------------------+" << endl;
 
     for (int i = 0; i < r; i++) {
-        cout << "|";
+        frame << "|";
         for (int j = 1; j < c - 1; j++) {
-            cout << b[i][j];
+            frame << b[i][j];
         }
-        cout << "|" << endl;
+        frame << "|" << endl;
     }
 
-    cout << "+--------------------------------------------------+" << endl;
+    frame << "+--------------------------------------------------+" << endl;
 
     if (g) {
         string msg = ">>> GAME OVER <<<";
         int padding = (50 - msg.length()) / 2;
-        cout << string(padding, ' ') << msg << endl;
+        frame << string(padding, ' ') << msg << endl;
     }
+
+    cout << frame.str();
 }
 
 
@@ -167,6 +173,7 @@ void spawnLayer(int lay) {
 
 int main() {
     clr();
+    std::cout << "\033[?25l"; // this ASCII sequence hides carriage "|" in terminal
     b[px][py] = p;
     spawnLayer(layer);
 
@@ -194,11 +201,11 @@ int main() {
             b[px][py] = p;
             spawnLayer(layer);
         }
-          Sleep(70);
+          Sleep(55);
 		 //this will make that disappearing effect go off but will also slow the game
 }
     printBoard();
     system("pause");
+    std::cout << "\033[?25h"; // this ASCII sequence shows carriage "|" in terminal
     return 0;
 }
-
